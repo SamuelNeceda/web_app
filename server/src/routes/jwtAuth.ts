@@ -1,5 +1,7 @@
 import {Router} from "express";
 import pool from "../dbServer";
+import generateJWT from "../utils/jwtGenerator";
+import bcrypt from "bcrypt";
 
 const router = Router();
 
@@ -28,12 +30,15 @@ router.post("/register", async (req, res) => {
             return res.status(401).json("User is already registered.");
         }
 
+        const salt = await bcrypt.genSalt(10);
+        const bcryptPassword = await bcrypt.hash(password, salt);
+
         const insertStatus = status ?? "patient"
         let uniqueUser = await pool.query(
             "INSERT INTO useraccount (email, password, firstname, lastname, title, birthdate, phone, sex, status, birthnumber) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
             [
                 email,
-                password,
+                bcryptPassword,
                 firstname,
                 lastname,
                 title,
@@ -45,8 +50,11 @@ router.post("/register", async (req, res) => {
             ]
         );
 
+        const token = generateJWT(uniqueUser.rows[0].password)
         res.json({
             success: true,
+            message: "Authentication successful!",
+            token: token,
         });
     } catch (err) {
         console.error(err.message);
@@ -68,15 +76,17 @@ router.post("/login", async (req, res) => {
             return res.status(401).json("Invalid email.");
         }
 
-        const validPassword = password === user.rows[0].password;
+        const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
         if (!validPassword) {
             return res.status(401).json("Invalid password.");
         }
 
+        const token = generateJWT(user.rows[0].password);
         res.json({
             success: true,
             message: "Authentication successful!",
+            token: token,
         });
     } catch (err) {
         console.error(err.message);
