@@ -54,4 +54,34 @@ router.post("/register", async (req, res) => {
     }
 });
 
+// LOGIN
+router.post("/login", async (req, res) => {
+    const {email, password} = req.body;
+
+    try {
+        const user = await pool.query(
+            "SELECT * FROM useraccount WHERE email = $1",
+            [email]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(401).json("Invalid email.");
+        }
+
+        const validPassword = password === user.rows[0].password;
+
+        if (!validPassword) {
+            return res.status(401).json("Invalid password.");
+        }
+
+        res.json({
+            success: true,
+            message: "Authentication successful!",
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
 module.exports = router;
