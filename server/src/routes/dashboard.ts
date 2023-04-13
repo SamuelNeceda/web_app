@@ -1,7 +1,8 @@
 const router = require("express").Router();
 import pool from "../dbServer"
+import authorization from "../middleware/authorization";
 
-router.get("/", async (req, res) => {
+router.get("/", authorization, async (req, res) => {
   try {
     // req.user -> returns the object with id which represents userid in table
     const user = await pool.query(

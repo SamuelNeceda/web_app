@@ -96,4 +96,16 @@ router.post("/login", inputValidation, async (req, res) => {
     }
 });
 
+// VERIFY
+// Check if the token is valid before accessing private routes
+// Verify whenever the user refreshes the page
+router.get("/verify", authorization, (req, res) => {
+    try {
+        res.json(true);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
 module.exports = router;
