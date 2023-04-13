@@ -2,11 +2,13 @@ import {Router} from "express";
 import pool from "../dbServer";
 import generateJWT from "../utils/jwtGenerator";
 import bcrypt from "bcrypt";
+import authorization from "../middleware/authorization";
+const inputValidation = require("../middleware/inputValidation");
 
 const router = Router();
 
 // REGISTER
-router.post("/register", async (req, res) => {
+router.post("/register",inputValidation, async (req, res) => {
     const {
         email,
         password,
@@ -63,7 +65,7 @@ router.post("/register", async (req, res) => {
 });
 
 // LOGIN
-router.post("/login", async (req, res) => {
+router.post("/login", inputValidation, async (req, res) => {
     const {email, password} = req.body;
 
     try {
