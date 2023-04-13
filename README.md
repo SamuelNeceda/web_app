@@ -4,7 +4,7 @@
 
 For any additional information, please refer to the [tutorial].
 
-To run the app locally, please firstly follow the instructions in the [server](./src/server/README.md) and
-then [client](./src/client/README.md) READMEs.
+To run the app locally, please firstly follow the instructions in the [server](./server/README.md) and
+then [client](./client/README.md) READMEs.
 
 [tutorial]: <https://www.hack-health.tech/>
