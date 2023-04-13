@@ -1,5 +1,5 @@
 import './App.css';
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useState, useEffect} from 'react';
 import {
     BrowserRouter as Router,
     Route,
@@ -9,11 +9,32 @@ import {
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
     // default value of state is false, meaning user is not authenticated
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const checkAuthenticated = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/auth/verify", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await res.json();
+            parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    // check the state after each reload
+    useEffect(() => {
+        checkAuthenticated();
+    }, []);
 
     // check if user is authenticated
     const setAuth = (boolean) => {
@@ -67,9 +88,9 @@ function App() {
                             }
                         />
                     </Switch>
-
                 </div>
             </Router>
+            <ToastContainer/>
         </Fragment>
     );
 }
