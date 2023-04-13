@@ -1,0 +1,35 @@
+ {
+  "compilerOptions": {
+    // Specifies the library files to include during compilation
+    "lib": ["es6"],
+
+    // Specifies the module system to use
+    "module": "commonjs",
+
+    // Specifies the ECMAScript version to target
+    "target": "ES2020",
+
+    // Specifies whether to generate source maps for debugging
+    "sourceMap": true,
+
+    // Specifies the output directory for the compiled code
+    "outDir": "dist",
+
+    // Specifies the syntax to use for React components
+    "jsx": "react",
+
+    // Specifies whether to allow default imports from CommonJS modules with ESModule interop
+    "esModuleInterop": true
+  },
+
+  // Specifies the file patterns to include in the compilation process
+  "include": [
+    "./**/*.ts"
+  ],
+
+  // Specifies the file patterns to exclude from the compilation process
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
